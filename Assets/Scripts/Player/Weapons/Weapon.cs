@@ -1,6 +1,7 @@
 using FishNet.Object;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Weapon : NetworkBehaviour
@@ -64,13 +65,27 @@ public class Weapon : NetworkBehaviour
     [Header("Componetns")]
     [SerializeField] private CameraController cameraController;
 
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI textAmmo;
+
     public bool IsAiming { get; set; }
     public bool IsReloading { get; private set; }
-    public int CurrentAmmo => currentAmmo;
+    public int CurrentAmmo
+    {
+        get
+        {
+            return currentAmmo;
+        }
+        private set
+        {
+            currentAmmo = value;
+            textAmmo.text = $"{currentAmmo}/{maxAmmo}";
+        }
+    }
 
     private void Start()
     {
-        currentAmmo = maxAmmo;
+        CurrentAmmo = maxAmmo;
         initialGunPosition = transform.localPosition;
     }
 
@@ -89,7 +104,7 @@ public class Weapon : NetworkBehaviour
         if ((Time.time >= nextTime2Fire) && (currentAmmo > 0) && (!IsReloading))
         {
             nextTime2Fire = Time.time + 1f / fireRate;
-            currentAmmo--;
+            CurrentAmmo--;
 
             Fire();
         }
@@ -144,7 +159,7 @@ public class Weapon : NetworkBehaviour
         yield return new WaitForSeconds(reloadTime);
 
         IsReloading = false;
-        currentAmmo = maxAmmo;
+        CurrentAmmo = maxAmmo;
     }
 
     [ObserversRpc]

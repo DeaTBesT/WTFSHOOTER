@@ -3,6 +3,7 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerStats : NetworkBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerStats : NetworkBehaviour
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI textHealth;
+    [SerializeField] private Slider sliderHealth;
 
     public float Health
     {
@@ -22,7 +24,8 @@ public class PlayerStats : NetworkBehaviour
         set
         {
             health = value;
-            textHealth.text = health.ToString();
+            sliderHealth.value = health / 100;
+            //textHealth.text = health.ToString();
         }
     }
 
