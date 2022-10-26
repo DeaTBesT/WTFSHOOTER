@@ -1,4 +1,5 @@
 using FishNet.Object;
+using TMPro;
 using UnityEngine;
 
 public class WeaponController : NetworkBehaviour
