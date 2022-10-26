@@ -50,10 +50,10 @@ public class PlayerStats : NetworkBehaviour
         }
         else
         {
-            Health = maxHealth;
-
             Transform m_respawnPosition = GameManager.Instance.SpawnPoints[Random.Range(0, GameManager.Instance.SpawnPoints.Length)];
             transform.position = m_respawnPosition.position;
+
+            Health = maxHealth;
         }
     }
 }

@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
+    [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform[] spawnPoints;
-    
-    [Header("UI")]
-    [SerializeField] private Tugboat tugboat;
-    [SerializeField] private GameObject inputField;
 
     public Transform[] SpawnPoints => spawnPoints;
 
@@ -19,11 +16,13 @@ public class GameManager : NetworkBehaviour
         base.OnStartClient();
 
         Instance = this;
-        inputField.SetActive(false);
+        //SpawnPlayer();
     }
 
-    public void SetAdress(string m_adress)
+    [ServerRpc(RequireOwnership = false)]
+    private void SpawnPlayer()
     {
-        tugboat.SetClientAddress(m_adress);
+        GameObject m_newPlayer =Instantiate(playerPrefab, spawnPoints[Random.Range(0, spawnPoints.Length)].position, Quaternion.identity);
+        ServerManager.Spawn(m_newPlayer);
     }
 }

@@ -199,7 +199,7 @@ public class Weapon : NetworkBehaviour
         KickBack();
     }
 
-    [ObserversRpc]
+    [ObserversRpc(RunLocally = true)]
     private void Recoil()
     {
         targetPosition -= Vector3.forward * kickBackZ;
