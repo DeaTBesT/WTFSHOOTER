@@ -98,7 +98,7 @@ public class Weapon : NetworkBehaviour
         CalculateWeaponRecoil();
     }
     
-    [ServerRpc]
+    [ObserversRpc(RunLocally = true)]
     public void UseFire()
     {
         if ((Time.time >= nextTime2Fire) && (currentAmmo > 0) && (!IsReloading))
@@ -110,7 +110,7 @@ public class Weapon : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ObserversRpc(RunLocally = true)]
     public void UseReload()
     {
         if (currentAmmo >= maxAmmo) { return; }
@@ -127,14 +127,14 @@ public class Weapon : NetworkBehaviour
         Recoil();
     }
 
-    [ServerRpc(RequireOwnership = false, RunLocally = true)]
+    [ServerRpc(RunLocally = false)]
     private void SpawnBulletRPC()
     {
-        Ray m_ray = new Ray(cameraController.GetCameraPivot.position, cameraController.GetCameraPivot.forward);
-        RaycastHit m_hit;
+        //Ray m_ray = new Ray(cameraController.GetCameraPivot.position, cameraController.GetCameraPivot.forward);
+        //RaycastHit m_hit;
 
-        if (Physics.Raycast(m_ray, out m_hit)) { bulletSpawnPoint.LookAt(m_hit.point); }
-        else { bulletSpawnPoint.localRotation = Quaternion.identity; }
+        //if (Physics.Raycast(m_ray, out m_hit)) { bulletSpawnPoint.LookAt(m_hit.point); }
+        //else { bulletSpawnPoint.localRotation = Quaternion.identity; }
         
         GameObject m_bullet = Instantiate(bulletPrefab.gameObject, bulletSpawnPoint.position, Quaternion.identity);
         Spawn(m_bullet);
@@ -162,8 +162,15 @@ public class Weapon : NetworkBehaviour
         CurrentAmmo = maxAmmo;
     }
 
-    [ObserversRpc]
+    [ObserversRpc(RunLocally = true)]
     private void RPCReloadEffects()
+    {
+        _animator.Play(animReload);
+        RPCReloadEffectsServer();
+    }
+
+    [ServerRpc]
+    private void RPCReloadEffectsServer()
     {
         _animator.Play(animReload);
     }

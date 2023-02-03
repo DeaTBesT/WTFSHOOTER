@@ -15,6 +15,7 @@ public class WeaponHitscan : Weapon
         CastRay();
     }
 
+    [ServerRpc(RequireOwnership = false, RunLocally = true)]
     private void CastRay()
     {
         Ray m_ray = new Ray(_camera.position, _camera.forward);
